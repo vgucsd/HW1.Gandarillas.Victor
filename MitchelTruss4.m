@@ -101,3 +101,9 @@ tensegrity_plot(free_nodes, fixed_nodes, C, num_bars, ...
 % Ase is not potentially inconsistent. Good.
 % ...
 % Ase is not underdetermined (thus, it is not tensionable). The above solution is unique.
+
+% With zero load,
+% Some strings not under tension. Needs different tensioning or external loads.
+
+% With tip load of 1,
+% The 10 strings are all under tension with tau_min=0.22527. Good.
