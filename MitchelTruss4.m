@@ -2,11 +2,7 @@ close all
 clc
 clear
 
-% total number of members = 20
-num_bars        = 10;
-num_strings     = 10;
-
-% We are generating a Michell Spiral of order 4
+% We are generating a truss made of Michell Spirals of order 4 and lower
 order = 4;
 
 % Angles defining Michell Spiral
@@ -78,14 +74,30 @@ C(20,12) = -1;
 % Make all members bars
 num_bars = 2*num_members;
 num_strings = 0;
+% Make half the members bars and the other half strings
+num_bars = num_members;
+num_strings = num_members;
 
 % No forces on the free nodes by default
 forces = zeros(2, num_free_nodes);
+% downward tip load
+forces(2,1) = -1;
 
-
+% Analyze truss
 [c_bars, t_strings, V] = tensegrity_statics(num_bars, num_strings, ...
     num_free_nodes, num_fixed_nodes, 2, free_nodes, fixed_nodes, C, ...
     forces);
 
+% Verify connectivity matrix by visualizing truss
 tensegrity_plot(free_nodes, fixed_nodes, C, num_bars, ...
     num_strings, forces, V)
+
+
+%% Expected Output
+
+% For all four cases described, the output should be as follows
+% (c_bars and t_strings results not included)
+
+% Ase is not potentially inconsistent. Good.
+% ...
+% Ase is not underdetermined (thus, it is not tensionable). The above solution is unique.
