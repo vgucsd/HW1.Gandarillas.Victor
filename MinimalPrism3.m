@@ -21,14 +21,14 @@ r           = 1;
 
 % Construct connectivity matrix for Nonminimal Prism
 C = zeros(num_members, num_free_nodes);
-
+free_nodes
 % bars
 C(1,1) = 1;
-C(1,4) = -1;
+C(1,6) = -1;
 C(2,2) = 1;
-C(2,5) = -1;
+C(2,4) = -1;
 C(3,3) = 1;
-C(3,6) = -1;
+C(3,5) = -1;
 
 % strings
 C(num_bars+1,1) = 1;
@@ -43,18 +43,16 @@ C(num_bars+5,5) = 1;
 C(num_bars+5,6) = -1;
 C(num_bars+6,6) = 1;
 C(num_bars+6,4) = -1;
-C(num_bars+7,3) = 1;
-C(num_bars+7,5) = -1;
-C(num_bars+8,1) = 1;
-C(num_bars+8,6) = -1;
-C(num_bars+9,2) = 1;
-C(num_bars+9,4) = -1;
+C(num_bars+7,1) = 1;
+C(num_bars+7,4) = -1;
+C(num_bars+8,2) = 1;
+C(num_bars+8,5) = -1;
+C(num_bars+9,3) = 1;
+C(num_bars+9,6) = -1;
 
 
 % No forces on the free nodes by default
 forces = zeros(3, num_free_nodes);
-% forces(3,1:num_bars) = 1;
-% forces(3,num_bars+1:2*num_bars) = -1;
 
 % Analyze truss
 % num_strings = 1

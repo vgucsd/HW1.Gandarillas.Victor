@@ -5,8 +5,8 @@ function [num_free_nodes, free_nodes] = construct_prism_nodes(...
     y_vals = r*sin(angle);
     z_vals = zeros(num_bars,1);
 
-    x_twisted = x_vals*cos(twist_angle) - y_vals*sin(twist_angle);
-    y_twisted = x_vals*sin(twist_angle) + y_vals*cos(twist_angle);
+    x_twisted = x_vals*cos(twist_angle) + y_vals*sin(twist_angle);
+    y_twisted = -x_vals*sin(twist_angle) + y_vals*cos(twist_angle);
 
     z_twisted = sqrt(r^2 ...
         - (x_twisted(1) - x_vals(1))^2 ...
