@@ -5,6 +5,11 @@ clear
 % We are generating a truss made of Michell Spirals of order 4 and lower
 order = 4;
 
+% Number of members (bars and strings)
+num_bars    = (order + 1) * order / 2;
+num_strings = num_bars;
+num_members = num_bars + num_strings;
+
 % Angles defining Michell Spiral
 beta = pi/6;
 phi  = pi/16;
@@ -22,12 +27,11 @@ r0=1;
     n_mag, ...
     n_phase);
 
-% Compute members (bars and strings)
-num_members = (order + 1) * order / 2;
-
 % Construct connectivity matrix for Michell Spiral and its reflection
 % about horizontal axis
-C = zeros(2*num_members, num_nodes);
+C = zeros(num_members, num_nodes);
+
+% bars
 C(1,1) = 1;
 C(1,2) = -1;
 C(2,2) = 1;
@@ -49,7 +53,7 @@ C(9,13) = -1;
 C(10,10) = 1;
 C(10,14) = -1;
 
-
+% strings
 C(11,1) = 1;
 C(11,5) = -1;
 C(12,5) = 1;
@@ -71,16 +75,13 @@ C(19,13) = -1;
 C(20,4) = 1;
 C(20,12) = -1;
 
-% Make all members bars
-num_bars = 2*num_members;
-num_strings = 0;
-% Make half the members bars and the other half strings
-num_bars = num_members;
-num_strings = num_members;
-
 % No forces on the free nodes by default
 forces = zeros(2, num_free_nodes);
+% uniform load
+forces = zeros(2, num_free_nodes);
+forces(2,:) = -1;
 % downward tip load
+forces = zeros(2, num_free_nodes);
 forces(2,1) = -1;
 
 % Analyze truss
@@ -93,7 +94,7 @@ tensegrity_plot(free_nodes, fixed_nodes, C, num_bars, ...
     num_strings, forces, V)
 
 
-%% Expected Output
+% Expected Output
 
 % For all four cases described, the output should be as follows
 % (c_bars and t_strings results not included)
