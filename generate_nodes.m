@@ -6,13 +6,9 @@ function [num_nodes, n_mag, n_phase] = generate_nodes(order, beta, phi, r0)
 
     % Generate node radial positions and member lengths
     radii          = zeros(order,1);
-    member_lengths = zeros(order,1);
     radii(1)       = r0;
     for l=0:order-1
         radii(l+2) = a*radii(l+1);
-    end
-    for l=0:order
-        member_lengths(l+1) = c*radii(l+1);
     end
 
     % Set up magnitudes and phases of members of a Mitchell Spiral
@@ -27,5 +23,5 @@ function [num_nodes, n_mag, n_phase] = generate_nodes(order, beta, phi, r0)
         k_max = k_max - 1;
     end
     
-    num_nodes = (order + 1) + (order + 2) * (order + 1) / 2 - (order + 1);
+    num_nodes = (order + 2) * (order + 1) / 2;
 end

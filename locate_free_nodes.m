@@ -1,6 +1,6 @@
 function [num_free_nodes, Q] = locate_free_nodes(order, n_mag, n_phase)
     % Locations of free nodes
-    num_free_nodes = (order + 2) * (order + 1) / 2 - (order + 1);
+    num_free_nodes = (order + 1) * order / 2;
     Q              = zeros(2, num_free_nodes);
     k              = 1;
     for i=0:order-1

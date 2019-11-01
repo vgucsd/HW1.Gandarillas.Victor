@@ -1,6 +1,6 @@
 function [num_fixed_nodes, P] = locate_fixed_nodes(order, n_mag, n_phase)
     % Locations of fixed nodes
-    num_fixed_nodes = order+1;
+    num_fixed_nodes = order + 1;
     P               = zeros(2, num_fixed_nodes);
     k               = 1;
     for i=0:order

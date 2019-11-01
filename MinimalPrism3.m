@@ -21,7 +21,7 @@ r           = 1;
 
 % Construct connectivity matrix for Nonminimal Prism
 C = zeros(num_members, num_free_nodes);
-free_nodes
+
 % bars
 C(1,1) = 1;
 C(1,6) = -1;
