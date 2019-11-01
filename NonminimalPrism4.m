@@ -8,12 +8,27 @@ num_bars    = 4;
 num_strings = 3*num_bars;
 num_members = num_bars + num_strings;
 
-% Define prism
-twist_angle = pi/2-pi/num_bars;
+% twist_angle = pi/2-pi/num_bars;
+
+% Make tension in diagonal strings equal to tension in vertical strings
+% Eq. 3.66, Skelton
+syms alfa
+twist_angle = ...
+    eval(...
+        solve(...
+            2 * cos(alfa) * cos(pi / num_bars) == ...
+                -cos(alfa + pi / num_bars) ...
+        ) ...
+    );
+twist_angle = real(twist_angle(2));
+if pi / 2 - pi / num_bars > twist_angle || twist_angle > pi / 2
+    error("twist_angle not okay!");
+end
+
 poly_angle  = 2*pi/num_bars;
 r           = 1;
 
-[num_free_nodes, free_nodes] = construct_prism_nodes(...
+[num_free_nodes, free_nodes] = construct_nonmin_prism_nodes(...
     poly_angle, ...
     twist_angle, ...
     r, ...
@@ -24,13 +39,13 @@ C = zeros(num_members, num_free_nodes);
 
 % bars
 C(1,1) = 1;
-C(1,5) = -1;
+C(1,8) = -1;
 C(2,2) = 1;
-C(2,6) = -1;
+C(2,5) = -1;
 C(3,3) = 1;
-C(3,7) = -1;
+C(3,6) = -1;
 C(4,4) = 1;
-C(4,8) = -1;
+C(4,7) = -1;
 
 % strings
 C(num_bars+1,1) = 1;
@@ -49,49 +64,28 @@ C(num_bars+7,7) = 1;
 C(num_bars+7,8) = -1;
 C(num_bars+8,8) = 1;
 C(num_bars+8,5) = -1;
-C(num_bars+9,2) = 1;
+C(num_bars+9,1) = 1;
 C(num_bars+9,5) = -1;
-C(num_bars+10,3) = 1;
+C(num_bars+10,2) = 1;
 C(num_bars+10,6) = -1;
-C(num_bars+11,4) = 1;
+C(num_bars+11,3) = 1;
 C(num_bars+11,7) = -1;
-C(num_bars+12,1) = 1;
+C(num_bars+12,4) = 1;
 C(num_bars+12,8) = -1;
 
 % nonminimal strings
-% num_strings      = 20;
-% C(num_bars+13,2) = 1;
-% C(num_bars+13,7) = -1;
-% C(num_bars+14,3) = 1;
-% C(num_bars+14,8) = -1;
-% C(num_bars+15,4) = 1;
-% C(num_bars+15,5) = -1;
-% C(num_bars+16,1) = 1;
-% C(num_bars+16,6) = -1;
-% C(num_bars+17,1) = 1;
-% C(num_bars+17,7) = -1;
-% C(num_bars+18,2) = 1;
-% C(num_bars+18,8) = -1;
-% C(num_bars+19,3) = 1;
-% C(num_bars+19,5) = -1;
-% C(num_bars+20,4) = 1;
-% C(num_bars+20,6) = -1;
-
-
-% C(num_bars+13,2) = 1;
-% C(num_bars+13,4) = -1;
-% C(num_bars+14,3) = 1;
-% C(num_bars+14,1) = -1;
-% C(num_bars+15,6) = 1;
-% C(num_bars+15,8) = -1;
-% C(num_bars+16,5) = 1;
-% C(num_bars+16,7) = -1;
-
+num_strings = 16;
+C(num_bars+13,1) = 1;
+C(num_bars+13,6) = -1;
+C(num_bars+14,2) = 1;
+C(num_bars+14,7) = -1;
+C(num_bars+15,3) = 1;
+C(num_bars+15,8) = -1;
+C(num_bars+16,4) = 1;
+C(num_bars+16,5) = -1;
 
 % No forces on the free nodes by default
 forces = zeros(3, num_free_nodes);
-% forces(3,1:num_bars) = 1;
-% forces(3,num_bars+1:2*num_bars) = -1;
 
 % Analyze truss
 % num_strings = 1
@@ -105,3 +99,82 @@ tensegrity_plot(free_nodes, [], C, num_bars, ...
 
 
 % Expected Output
+
+% mhat =
+% 
+%     24
+% 
+% 
+% nhat =
+% 
+%     20
+% 
+% 
+% r =
+% 
+%     17
+% 
+% Warning: Ase is potentially inconsistent, implying the presence of soft modes,
+% or instability!  More strings or fixed points should fix the problem.
+%  
+% Bar compressions and string tensions with loads as specified,
+% least squares solution (i.e., NO pretensioning):
+% u in column space of Ase, so at least one solution exists, with residual 0.
+% 
+% c_bars =
+% 
+%      0     0     0     0
+% 
+% No bars under tension.  Good.
+% 
+% t_strings =
+% 
+%      0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+% 
+% Some strings not under tension. Needs different tensioning or external loads.
+%  
+% Ase is underdetermined with 3 DOF. Checking now to see if system is pretensionable,
+% with tension >= 0.1 in all tethers for zero applied load.
+%  
+% Result with external load ZERO, pretensioned with given tau_min
+% while minimizing the L1 norm of the tensions:
+% 
+% c_bars =
+% 
+%     0.4379    0.4379    0.4379    0.4379
+% 
+% No bars under tension.  Good.
+% 
+% t_strings =
+% 
+%   Columns 1 through 10
+% 
+%     0.2236    0.2236    0.2236    0.2236    0.2236    0.2236    0.2236    0.2236    0.1505    0.1505
+% 
+%   Columns 11 through 16
+% 
+%     0.1505    0.1505    0.1000    0.1000    0.1000    0.1000
+% 
+% The 16 strings are all under tension with tau_min=0.1. Good.
+%  
+% Pretensionable!
+% Results with external forces u as specified and tensioned with given tau_min
+% while minimizing the L1 norm of the tensions.
+% 
+% c_bars =
+% 
+%     0.4379    0.4379    0.4379    0.4379
+% 
+% No bars under tension.  Good.
+% 
+% t_strings =
+% 
+%   Columns 1 through 10
+% 
+%     0.2236    0.2236    0.2236    0.2236    0.2236    0.2236    0.2236    0.2236    0.1505    0.1505
+% 
+%   Columns 11 through 16
+% 
+%     0.1505    0.1505    0.1000    0.1000    0.1000    0.1000
+% 
+% The 16 strings are all under tension with tau_min=0.1. Good.
