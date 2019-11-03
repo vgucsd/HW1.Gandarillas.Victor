@@ -17,15 +17,15 @@ phi  = pi/16;
 r0=1;
 
 % Compute nodes
-[num_nodes, n_mag, n_phase]    = generate_nodes(order, beta, phi, r0)
+[num_nodes, n_mag, n_phase]    = generate_nodes(order, beta, phi, r0);
 [num_fixed_nodes, fixed_nodes] = locate_fixed_nodes(...
     order, ...
     n_mag, ...
-    n_phase)
+    n_phase);
 [num_free_nodes, free_nodes]  = locate_free_nodes(...
     order, ...
     n_mag, ...
-    n_phase)
+    n_phase);
 
 % Construct connectivity matrix for Michell Spiral and its reflection
 % about horizontal axis
@@ -103,8 +103,22 @@ tensegrity_plot(free_nodes, fixed_nodes, C, num_bars, ...
 % ...
 % Ase is not underdetermined (thus, it is not tensionable). The above solution is unique.
 
-% With zero load,
+% With zero load:
 % Some strings not under tension. Needs different tensioning or external loads.
 
-% With tip load of 1,
+% With tip load of 1:
+% Bar compressions and string tensions with loads as specified,
+% least squares solution (i.e., NO pretensioning):
+% 
+% c_bars =
+% 
+%     1.0000    1.0934    1.1956    0.2253    0.2971    0.2463    1.3073    0.3803    0.3362    0.2693
+% 
+% No bars under tension.  Good.
+% 
+% t_strings =
+% 
+%     1.0000    1.0934    1.1956    1.3073    0.2253    0.2971    0.3803    0.2463    0.3362    0.2693
+% 
+% The 10 strings are all under tension with tau_min=0.22527. Good.
 % The 10 strings are all under tension with tau_min=0.22527. Good.

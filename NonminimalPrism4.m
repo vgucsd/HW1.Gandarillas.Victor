@@ -8,7 +8,6 @@ num_bars    = 4;
 num_strings = 3*num_bars;
 num_members = num_bars + num_strings;
 
-% twist_angle = pi/2-pi/num_bars;
 
 % Make tension in diagonal strings equal to tension in vertical strings
 % Eq. 3.66, Skelton
@@ -26,12 +25,14 @@ if pi / 2 - pi / num_bars > twist_angle || twist_angle > pi / 2
 end
 
 poly_angle  = 2*pi/num_bars;
-r           = 1;
+poly_radius = 1;
+bar_length  = 1.5*poly_radius;
 
-[num_free_nodes, free_nodes] = construct_nonmin_prism_nodes(...
+[num_free_nodes, free_nodes] = construct_prism_nodes(...
     poly_angle, ...
     twist_angle, ...
-    r, ...
+    poly_radius, ...
+    bar_length, ...
     num_bars);
 
 % Construct connectivity matrix for Nonminimal Prism
@@ -39,13 +40,13 @@ C = zeros(num_members, num_free_nodes);
 
 % bars
 C(1,1) = 1;
-C(1,8) = -1;
+C(1,6) = -1;
 C(2,2) = 1;
-C(2,5) = -1;
+C(2,7) = -1;
 C(3,3) = 1;
-C(3,6) = -1;
+C(3,8) = -1;
 C(4,4) = 1;
-C(4,7) = -1;
+C(4,5) = -1;
 
 % strings
 C(num_bars+1,1) = 1;
@@ -76,16 +77,17 @@ C(num_bars+12,8) = -1;
 % nonminimal strings
 num_strings = 16;
 C(num_bars+13,1) = 1;
-C(num_bars+13,6) = -1;
+C(num_bars+13,8) = -1;
 C(num_bars+14,2) = 1;
-C(num_bars+14,7) = -1;
+C(num_bars+14,5) = -1;
 C(num_bars+15,3) = 1;
-C(num_bars+15,8) = -1;
+C(num_bars+15,6) = -1;
 C(num_bars+16,4) = 1;
-C(num_bars+16,5) = -1;
+C(num_bars+16,7) = -1;
 
 % No forces on the free nodes by default
 forces = zeros(3, num_free_nodes);
+twist_angle_deg =  twist_angle*180/pi
 
 % Analyze truss
 % num_strings = 1
@@ -141,7 +143,7 @@ tensegrity_plot(free_nodes, [], C, num_bars, ...
 % 
 % c_bars =
 % 
-%     0.4379    0.4379    0.4379    0.4379
+%     0.4406    0.4406    0.4406    0.4406
 % 
 % No bars under tension.  Good.
 % 
@@ -149,11 +151,11 @@ tensegrity_plot(free_nodes, [], C, num_bars, ...
 % 
 %   Columns 1 through 10
 % 
-%     0.2236    0.2236    0.2236    0.2236    0.2236    0.2236    0.2236    0.2236    0.1505    0.1505
+%     0.2253    0.2253    0.2253    0.2253    0.2253    0.2253    0.2253    0.2253    0.1511    0.1511
 % 
 %   Columns 11 through 16
 % 
-%     0.1505    0.1505    0.1000    0.1000    0.1000    0.1000
+%     0.1511    0.1511    0.1000    0.1000    0.1000    0.1000
 % 
 % The 16 strings are all under tension with tau_min=0.1. Good.
 %  
@@ -163,7 +165,7 @@ tensegrity_plot(free_nodes, [], C, num_bars, ...
 % 
 % c_bars =
 % 
-%     0.4379    0.4379    0.4379    0.4379
+%     0.4406    0.4406    0.4406    0.4406
 % 
 % No bars under tension.  Good.
 % 
@@ -171,10 +173,11 @@ tensegrity_plot(free_nodes, [], C, num_bars, ...
 % 
 %   Columns 1 through 10
 % 
-%     0.2236    0.2236    0.2236    0.2236    0.2236    0.2236    0.2236    0.2236    0.1505    0.1505
+%     0.2253    0.2253    0.2253    0.2253    0.2253    0.2253    0.2253    0.2253    0.1511    0.1511
 % 
 %   Columns 11 through 16
 % 
-%     0.1505    0.1505    0.1000    0.1000    0.1000    0.1000
+%     0.1511    0.1511    0.1000    0.1000    0.1000    0.1000
 % 
 % The 16 strings are all under tension with tau_min=0.1. Good.
+%  
