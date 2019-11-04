@@ -11,15 +11,23 @@ num_members = num_bars + num_strings;
 
 % Make tension in diagonal strings equal to tension in vertical strings
 % Eq. 3.66, Skelton
-syms alfa
-twist_angle = ...
-    eval(...
-        solve(...
-            2 * cos(alfa) * cos(pi / num_bars) == ...
-                -cos(alfa + pi / num_bars) ...
-        ) ...
-    );
-twist_angle = real(twist_angle(2));
+% a = linspace(pi / 2, pi / 2 - pi / num_bars, 20);
+% format long
+% a = linspace(1.352, 1.353, 20)
+% for twist_angle = a
+% syms alfa
+% twist_angle = ...
+%     eval(...
+%         solve(...
+%             2 * cos(alfa) * cos(pi / num_bars) == ...
+%                 -cos(alfa + pi / num_bars) ...
+%         ) ...
+%     );
+% twist_angle = real(twist_angle(2));
+
+% Results from for loop (commented out):
+twist_angle = 1.352578947368421
+twist_angle_deg = 77.497065142458041
 if pi / 2 - pi / num_bars > twist_angle || twist_angle > pi / 2
     error("twist_angle not okay!");
 end
@@ -87,6 +95,7 @@ C(num_bars+16,7) = -1;
 
 % No forces on the free nodes by default
 forces = zeros(3, num_free_nodes);
+twist_angle
 twist_angle_deg =  twist_angle*180/pi
 
 % Analyze truss
@@ -94,6 +103,8 @@ twist_angle_deg =  twist_angle*180/pi
 [c_bars, t_strings, V] = tensegrity_statics(num_bars, num_strings, ...
     num_free_nodes, 0, 3, free_nodes, [], C, ...
     forces);
+
+% end
 
 % Verify connectivity matrix by visualizing truss
 tensegrity_plot(free_nodes, [], C, num_bars, ...

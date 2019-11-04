@@ -78,8 +78,8 @@ C(20,12) = -1;
 % No forces on the free nodes by default
 forces = zeros(2, num_free_nodes);
 % uniform load
-forces = zeros(2, num_free_nodes);
-forces(2,:) = -1;
+% forces = zeros(2, num_free_nodes);
+% forces(2,:) = -1;
 % downward tip load
 forces = zeros(2, num_free_nodes);
 forces(2,1) = -1;

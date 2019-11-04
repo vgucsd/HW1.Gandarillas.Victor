@@ -21,11 +21,20 @@ MAE 290A}
 % A) Is this structure potentially inconsistent?  What does that mean?
 % B) is this structure undetermined?  What does that mean?  If it is underdetermined, is it pretensionable, or only tensionable under load?  Discuss.
 % Also include any other salient points regarding these designs.  You are encouraged to explore well beyond the specific questions asked; extra credit will be granted as appropriate...
+
 \begin{document}
 
 \maketitle
 
-\section{P1}
+\section{Assumptions}
+
+In this assignment, I used the MATLAB scripts provided: {\ttfamily tensegrity\_statics.m} and {\ttfamily tensegrity\_plot.m}.
+The scripts are assumed to be correct and consistent with the theory presented in \cite{skelton}.
+No attempt was made to verify or debug these scripts.
+The twist angle computed initially in Section \ref{sec:p2} does not result in the tensions in the vertical and diagonal strings being equal.
+An iterative approach was used to find the twist angle required to equalize the tensions in the vertical and diagonal strings.
+
+\section{P1}\label{sec:p1}
 
 We construct a Michell Truss from Michell Spirals according to Figure 4.6 of \cite{skelton}.
 The Michell Spirals are of order $q\in\{0,1,2,3,4\}$.
@@ -42,14 +51,21 @@ This is favorable since strings cannot support compression, but are much lighter
 \end{figure}
 
 As Listing \ref{lst:p1} shows, the Michell Truss is not potentially inconsistent.
+That is, the left nullspace of $A_{se}$ is $\{0\}$.
+Therefore, none of the loads are in the left nullspace of $A_{se}$.
+All loads are in the column space of $A_{se}$.
+% In other words, that there exists a solution for each load.
+
 The system is also not underdetermined.
+That is, the nullspace of $A_{se}$ is $\{0\}$.
+Therefore, there are no degrees of freedom available to pretension the strings (i.e. the system is not pretensionable).
+
 Since the system is not potentially inconsistent or underdetermined, the solution given in Listing \ref{lst:p1} corresponding to the truss in Figure \ref{fig:mt} is unique for a given load.
-The fact that the system is not potentially inconsistent implies that there exists a solution for all loads.
-That is, all the loads are in the column space of $A_{se}$.
+
+In the case of zero loads, the solution is zero reaction forces with compressions and tensions also equal to zero.
 
 
-
-\section{P2}
+\section{P2}\label{sec:p2}
 
 The regular minimal prism with 3 bars shown in Figure 3.43 of \cite{skelton} is reproduced in Figure \ref{fig:m3}.
 For comparison, the top view of the regular nonminimal prism with 4 bars is shown in Figure \ref{fig:np_top}.
@@ -64,7 +80,7 @@ For comparison, the top view of the regular nonminimal prism with 4 bars is show
 \begin{figure}[H]
   \centering
   \includegraphics[clip, trim=3.5cm 7.5cm 2.5cm 7.5cm, width=0.6\textwidth]{images/nonminimal_prism_4_top.pdf}
-  \caption{Top view of regular nonminimal prism with 4 bars and 16 strings; bars shown in red, strings shown in black}
+  \caption{Top view of regular nonminimal prism with 4 bars and 16 strings, $\alpha=71.5651^\degree$; bars shown in red, strings shown in black}
   \label{fig:np_top}
 \end{figure}
 
@@ -83,20 +99,43 @@ Note that the twist angle $\alpha$ does not depend on the length of the bars or 
 \begin{figure}[H]
   \centering
   \includegraphics[clip, trim=3.5cm 7.5cm 2.5cm 7.5cm, width=0.6\textwidth]{images/nonminimal_prism_4.pdf}
-  \caption{Regular nonminimal prism with 4 bars and 16 strings; bars shown in red, strings shown in black}
+  \caption{Regular nonminimal prism with 4 bars and 16 strings, $\alpha=71.5651^\degree$; bars shown in red, strings shown in black}
   \label{fig:np}
 \end{figure}
 
-Ase is potentially inconsistent, implying the presence of soft modes,
-or instability!  More strings or fixed points should fix the problem.
+The angle $\alpha=71.5651^\degree$ does not produce the same tension in the vertical and diagonal strings, as seen in Listing \ref{lst:p2a}.
+Sweeping across the range of valid twist angles, $\alpha=77.4971^\degree$ produced the minimum tension across the vertical and diagonal strings, as seen in Listing \ref{lst:p2b}.
+The nonminimal prism with equal tensions in vertical and diagonal strings is shown in Figure \ref{fig:npe} and the top view is shown in Figure \ref{fig:npte}.
 
-Ase is underdetermined with 3 DOF.
+\begin{figure}[H]
+  \centering
+  \includegraphics[clip, trim=3.5cm 7.5cm 2.5cm 7.5cm, width=0.6\textwidth]{images/nonminimal_prism_4.pdf}
+  \caption{Regular nonminimal prism with 4 bars and 16 strings, $\alpha=77.4971^\degree$; bars shown in red, strings shown in black}
+  \label{fig:npe}
+\end{figure}
 
-Pretensionable!
+\begin{figure}[H]
+  \centering
+  \includegraphics[clip, trim=3.5cm 7.5cm 2.5cm 7.5cm, width=0.6\textwidth]{images/nonminimal_prism_4_top_eq.pdf}
+  \caption{Top view of regular nonminimal prism with 4 bars and 16 strings, $\alpha=77.4971^\degree$; bars shown in red, strings shown in black}
+  \label{fig:npte}
+\end{figure}
 
-% Look at the tensions in the strings. There should only be 1 DOF.
+As Listings \ref{lst:p2a} and \ref{lst:p2b} show, the regular nonminimal prism is potentially inconsistent.
+That is, the left nullspace of $A_{se}$ has nonzero dimension.
+Therefore, if a load in the left nullspace of $A_{se}$ is applied, there is no solution.
+This gives rise to soft modes, or instability.
 
-\section{Code Output}
+% You can choose a solution with no components in the nullspace.
+The system is also underdetermined with 3 DOF.
+That is, the nullspace of $A_{se}$ has dimension 3.
+Therefore, there are 3 degrees of freedom available to pretension the strings (i.e. the system is pretensionable) so that the solution has no components in the nullspace of $A_{se}$.
+
+Since the system is potentially inconsistent and underdetermined, if there exists a solution, then there exist an infinite number of solutions for any given force in the column space of $A_{se}$.
+The solution is chosen to have no components in the nullspace of $A_{se}$.
+
+
+\section{Code Output}\label{sec:output}
 
 \begin{lstlisting}[caption={Ouput of MitchellTruss4.m},captionpos=t, label={lst:p1}]
 mhat =
@@ -114,7 +153,7 @@ r =
     20
 
 Ase is not potentially inconsistent. Good.
- 
+
 Bar compressions and string tensions with loads as specified,
 least squares solution (i.e., NO pretensioning):
 
@@ -129,12 +168,12 @@ t_strings =
     1.0000    1.0934    1.1956    1.3073    0.2253    0.2971    0.3803    0.2463    0.3362    0.2693
 
 The 10 strings are all under tension with tau_min=0.22527. Good.
- 
+
 Ase is not underdetermined (thus, it is not tensionable). The above solution is unique.
 \end{lstlisting}
 
 
-\begin{lstlisting}[caption={Ouput of NonminimalPrism4.m},captionpos=t, label={lst:p2}]
+\begin{lstlisting}[caption={Ouput of NonminimalPrism4.m},captionpos=t, label={lst:p2a}]
 mhat =
 
     24
@@ -151,7 +190,7 @@ r =
 
 Warning: Ase is potentially inconsistent, implying the presence of soft modes,
 or instability!  More strings or fixed points should fix the problem.
- 
+
 Bar compressions and string tensions with loads as specified,
 least squares solution (i.e., NO pretensioning):
 u in column space of Ase, so at least one solution exists, with residual 0.
@@ -167,10 +206,10 @@ t_strings =
      0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
 
 Some strings not under tension. Needs different tensioning or external loads.
- 
+
 Ase is underdetermined with 3 DOF. Checking now to see if system is pretensionable,
 with tension >= 0.1 in all tethers for zero applied load.
- 
+
 Result with external load ZERO, pretensioned with given tau_min
 while minimizing the L1 norm of the tensions:
 
@@ -191,7 +230,7 @@ t_strings =
     0.1511    0.1511    0.1000    0.1000    0.1000    0.1000
 
 The 16 strings are all under tension with tau_min=0.1. Good.
- 
+
 Pretensionable!
 Results with external forces u as specified and tensioned with given tau_min
 while minimizing the L1 norm of the tensions.
@@ -215,4 +254,87 @@ t_strings =
 The 16 strings are all under tension with tau_min=0.1. Good.
 \end{lstlisting}
 
+\begin{lstlisting}[caption={Ouput of NonminimalPrism4.m with equal tensions across vertical and diagonal strings},captionpos=t, label={lst:p2b}]
+mhat =
+
+    24
+
+
+nhat =
+
+    20
+
+
+r =
+
+    17
+
+Warning: Ase is potentially inconsistent, implying the presence of soft modes,
+or instability!  More strings or fixed points should fix the problem.
+
+Bar compressions and string tensions with loads as specified,
+least squares solution (i.e., NO pretensioning):
+u in column space of Ase, so at least one solution exists, with residual 0.
+
+c_bars =
+
+     0     0     0     0
+
+No bars under tension.  Good.
+
+t_strings =
+
+     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+
+Some strings not under tension. Needs different tensioning or external loads.
+
+Ase is underdetermined with 3 DOF. Checking now to see if system is pretensionable,
+with tension >= 0.1 in all tethers for zero applied load.
+
+Result with external load ZERO, pretensioned with given tau_min
+while minimizing the L1 norm of the tensions:
+
+c_bars =
+
+   0.395484232457561   0.395484232457561   0.395484232457562   0.395484232457561
+
+No bars under tension.  Good.
+
+t_strings =
+
+  Columns 1 through 9
+
+   0.217788637615165   0.217788637615165   0.217788637615165   0.217788637615165   0.217788637615165   0.217788637615165   0.217788637615165   0.217788637615165   0.100018090280014
+
+  Columns 10 through 16
+
+   0.100018090280014   0.100018090280014   0.100018090280014   0.100000000000000   0.100000000000000   0.100000000000000   0.100000000000000
+
+The 16 strings are all under tension with tau_min=0.1. Good.
+
+Pretensionable!
+Results with external forces u as specified and tensioned with given tau_min
+while minimizing the L1 norm of the tensions.
+
+c_bars =
+
+   0.395484232457561   0.395484232457561   0.395484232457562   0.395484232457561
+
+No bars under tension.  Good.
+
+t_strings =
+
+  Columns 1 through 9
+
+   0.217788637615165   0.217788637615165   0.217788637615165   0.217788637615165   0.217788637615165   0.217788637615165   0.217788637615165   0.217788637615165   0.100018090280014
+
+  Columns 10 through 16
+
+   0.100018090280014   0.100018090280014   0.100018090280014   0.100000000000000   0.100000000000000   0.100000000000000   0.100000000000000
+
+The 16 strings are all under tension with tau_min=0.1. Good.
+\end{lstlisting}
+
+\bibliography{bib}
+\bibliographystyle{plain}
 \end{document}
